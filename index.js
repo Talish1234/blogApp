@@ -19,6 +19,10 @@ app.use(cookieParser());
 app.use('/api/user',userrouter);
 app.use('/api/post',postrouter);
 app.use('/api/review',reviewroute);
+app.use('/*', (req, res) => {
+  res.json({ message: 'working' });
+});
+
 app.listen(3000,()=> {
     ('working...');
 })
