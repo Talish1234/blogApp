@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  username String @unique
+  password String
+  date String 
+  bio String @default("")
+  location String @default("NA")
+  profile String @default("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png")
+  reviews     Review[] 
+  post Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  coverImage String @default("https://images.pexels.com/photos/2457284/pexels-photo-2457284.jpeg")
+  description Description?
+  summary String @default("")
+  catogries Catogries
+  views Int
+  reviews     Review[] 
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId],references: [id])
+  userId String @db.ObjectId
+}
+
+enum Catogries{
+  Fashion
+  Food
+  Coding
+  Style
+  Travel
+  Culture
+  Entertainment
+  Technology
+}
+
+model Description {
+id String @id @default(auto()) @map("_id") @db.ObjectId
+desc String @default("")
+post Post @relation(fields: [postId],references: [id])
+postId String @db.ObjectId @unique
+}
+
+
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text   String   @default("")
+  post      Post     @relation(fields: [postID], references: [id])
+  postID    String   @db.ObjectId
+  user      User     @relation(fields: [userID], references: [id])
+  userID    String   @db.ObjectId
+  createdAt DateTime @default(now())
+}
