@@ -8,6 +8,7 @@ const login = async (req,res) => {
     try{
     if(!username || !password)
     return reshandler(res,null,true,'Provide username or password',400);
+
     const user  = await prisma.User.findUnique({
         where:{
             username
